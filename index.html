@@ -7,13 +7,19 @@
 <body>
   <h1>Reviews Summary</h1>
   <h2>Overall Score: {{overallScore() | number:2 }}</h2> 
+  <h2>Total Number of Reviews: {{data.totalReviews}}</h2>
 
+  <h4>{{today | date:full-date}}</h4>
 
-  <ul>
-    <li ng-repeat='review in data.reviews'>{{review.author}}</li>
-  </ul> 
+  <a ui-sref="bysite">By Site</a>
+
+  <a ui-sref="byrating">By Rating</a>
+  <div ui-view></div>
+  <!-- We'll also add some navigation: -->
+  
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
+  <script src="https://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
   <script type="text/javascript" src='script.js'></script>
   
 </body>
