@@ -6,6 +6,9 @@
 </head>
 <body>
   <h1>Reviews Summary</h1>
+  <h2>Overall Score: {{overallScore() | number:2 }}</h2> 
+
+
   <ul>
     <li ng-repeat='review in data.reviews'>{{review.author}}</li>
   </ul> 

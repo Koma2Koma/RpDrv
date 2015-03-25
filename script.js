@@ -25,5 +25,21 @@ app.controller('ReviewCtrl', function($scope, $http) {
   }
 
   console.log($scope.data);
+
+  // calculate overall score across all sites
+  $scope.overallScore = function() {
+    var scoreSum = 0;
+    var noRatingCounter = 0;
+    for (var i = 0; i < $scope.data.totalReviews; i++) {
+      if ($scope.data.reviews[i].rating != null) {
+        scoreSum += $scope.data.reviews[i].rating;
+      } else {
+        noRatingCounter += 1;
+      }
+    }
+    return scoreSum / ($scope.data.totalReviews - noRatingCounter);
+  }
+
+
 })
 
