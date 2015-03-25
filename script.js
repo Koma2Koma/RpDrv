@@ -36,12 +36,15 @@ app.controller('ReviewCtrl', function($scope, $http) {
 
     var jsonPage = angular.fromJson(page.response);
 
-    reviews.push(jsonPage.reviews);
-
+    for (var review in jsonPage.reviews) {
+       var obj = jsonPage.reviews[review];
+       reviews.push(obj);
+    }
   }
 
+  $scope.reviews = reviews;
 
-  console.log(reviews);
+  //console.log($scope.reviews);
 })
 
 // app.controller('ReviewCtrl', function($scope, $http) {

@@ -6,7 +6,9 @@
 </head>
 <body>
   <h1>Aggregate Reviews</h1>
-  {{$scope.status}} 
+  <ul>
+    <li ng-repeat='review in reviews'>{{review.author}}</li>
+  </ul> 
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
   <script type="text/javascript" src='script.js'></script>
