@@ -1,7 +1,12 @@
 <!-- partials/state1.list.html -->
 <h3>List of State 1 Items</h3>
 
-
+<div id='displayBox'></div>
 <ul>
-  <li ng-repeat='review in data.reviews'>{{review.author}}</li>
+  <li ng-repeat='review in data.reviews'>
+    {{review.author}}
+    <button ng-click="displayReview(review)" ng-init='count=0'>View</button>
+    
+  </li>
 </ul> 
+

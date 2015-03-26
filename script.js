@@ -234,6 +234,18 @@ app.controller('ReviewCtrl', function($scope, $http) {
       });
   });
 
+  $scope.displayReview = function (reviewObj) {
+
+    var date = new Date(reviewObj.publishDate);
+
+    $('#displayBox').html('Author: ' + reviewObj.author + '<br>' +
+                          'Date Published: ' + date.toDateString() + '<br>' +
+                          'Rating: ' + reviewObj.rating + '<br>' +
+                          'Review: ' + reviewObj.review + '<br>' +
+                          'Review URL: ' + reviewObj.reviewUrl + '<br>' +
+                          'Site Name: ' + reviewObj.siteName);
+  }
+
 })
 
 
