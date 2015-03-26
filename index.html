@@ -8,19 +8,24 @@
   <h1>Reviews Summary</h1>
   <h2>Overall Score: {{overallScore() | number:2 }}</h2> 
   <h2>Total Number of Reviews: {{data.totalReviews}}</h2>
-
+  
+  <div>
+    <div id="overallLine" style="width:49%; height:200px; display:inline-block"></div>    
+    <div id='totalReviews' style="width:49%; height:200px; display:inline-block" ></div>
+  </div>
+  
   <h4>{{today | date:full-date}}</h4>
 
   <a ui-sref="bysite">By Site</a>
-
   <a ui-sref="byrating">By Rating</a>
+
   <div ui-view></div>
-  <!-- We'll also add some navigation: -->
   
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
   <script src="https://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="http://code.highcharts.com/stock/highstock.src.js"></script>
   <script type="text/javascript" src='script.js'></script>
-  
 </body>
 </html>

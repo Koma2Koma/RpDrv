@@ -68,13 +68,13 @@ app.controller('ReviewCtrl', function($scope, $http) {
   }();
 
   var parseReviewsByMonth = function () {
-    var today = new Date();
-    var sixAgo = addMonths(-6);
-    var fiveAgo = addMonths(-5);
-    var fourAgo = addMonths(-4);
-    var threeAgo = addMonths(-3);
-    var twoAgo = addMonths(-2);
-    var oneAgo = addMonths(-1);
+    $scope.today = new Date();
+    $scope.sixAgo = addMonths(-6);
+    $scope.fiveAgo = addMonths(-5);
+    $scope.fourAgo = addMonths(-4);
+    $scope.threeAgo = addMonths(-3);
+    $scope.twoAgo = addMonths(-2);
+    $scope.oneAgo = addMonths(-1);
 
     $scope.sixAgoObjects = [];
     $scope.fiveAgoObjects = [];
@@ -87,34 +87,154 @@ app.controller('ReviewCtrl', function($scope, $http) {
       var revObj = $scope.data.reviews[review];
       var revDate = new Date(revObj.publishDate);
       console.log(typeof(revDate));
-      if ( revDate >= sixAgo && revDate < fiveAgo) {
+      if ( revDate >= $scope.sixAgo && revDate < $scope.fiveAgo) {
         $scope.sixAgoObjects.push(revObj);
-      } else if (revDate >= fiveAgo && revDate < fourAgo){
+      } else if (revDate >= $scope.fiveAgo && revDate < $scope.fourAgo){
         $scope.fiveAgoObjects.push(revObj);
-      } else if (revDate >= fourAgo && revDate < threeAgo){
+      } else if (revDate >= $scope.fourAgo && revDate < $scope.threeAgo){
         $scope.fourAgoObjects.push(revObj);
-      } else if (revDate >= threeAgo && revDate < twoAgo){
+      } else if (revDate >= $scope.threeAgo && revDate < $scope.twoAgo){
         $scope.threeAgoObjects.push(revObj);
-      } else if (revDate >= twoAgo && revDate < oneAgo){
+      } else if (revDate >= $scope.twoAgo && revDate < $scope.oneAgo){
         $scope.twoAgoObjects.push(revObj);
-      } else if (revDate >= oneAgo && revDate < today){
+      } else if (revDate >= $scope.oneAgo && revDate < $scope.today){
         $scope.oneAgoObjects.push(revObj);
       }
     }
       
-      // console.log($scope.sixAgoObjects);
-      // console.log($scope.fiveAgoObjects);
-      // console.log($scope.fourAgoObjects);
-      // console.log($scope.threeAgoObjects);
-      // console.log($scope.twoAgoObjects);
-      // console.log($scope.oneAgoObjects);
   }();
 
   console.log($scope.averageRatings($scope.sixAgoObjects));
 
+  var monthConverter = function () {
+    $scope.month = new Array();
+    $scope.month[0] = "January";
+    $scope.month[1] = "February";
+    $scope.month[2] = "March";
+    $scope.month[3] = "April";
+    $scope.month[4] = "May";
+    $scope.month[5] = "June";
+    $scope.month[6] = "July";
+    $scope.month[7] = "August";
+    $scope.month[8] = "September";
+    $scope.month[9] = "October";
+    $scope.month[10] = "November";
+    $scope.month[11] = "December";
+  }();
+
+  $(function () {
+      $('#overallLine').highcharts({
+          title: {
+              text: 'Average Ratings for the Past Six Months',
+              x: -20 //center
+          },
+          subtitle: {
+              text: 'Source: Review Trackers',
+              x: -20
+          },
+          xAxis: {
+              categories: [ $scope.month[$scope.sixAgo.getMonth()], 
+                            $scope.month[$scope.fiveAgo.getMonth()], 
+                            $scope.month[$scope.fourAgo.getMonth()], 
+                            $scope.month[$scope.threeAgo.getMonth()], 
+                            $scope.month[$scope.twoAgo.getMonth()], 
+                            $scope.month[$scope.oneAgo.getMonth()]
+                          ]
+          },
+          yAxis: {
+              title: {
+                  text: 'Average Ratings'
+              },
+              plotLines: [{
+                  value: 0,
+                  width: 3,
+                  color: '#1A49B0'
+              }]
+          },
+          plotOptions: {
+              series: {
+                  color: '#0000FF'
+              }
+          },
+          tooltip: {
+              valueSuffix: ''
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'right',
+              verticalAlign: 'middle',
+              borderWidth: 0
+          },
+          series: [{
+              name: 'Overall Averages',
+              data: [$scope.averageRatings($scope.sixAgoObjects), 
+                     $scope.averageRatings($scope.fiveAgoObjects), 
+                     $scope.averageRatings($scope.fourAgoObjects), 
+                     $scope.averageRatings($scope.threeAgoObjects), 
+                     $scope.averageRatings($scope.twoAgoObjects), 
+                     $scope.averageRatings($scope.oneAgoObjects) 
+                    ]
+          }]
+      });
+  });
+  
+  $(function () {
+      $('#totalReviews').highcharts({
+          title: {
+              text: 'Amount of Reviews in the Past Six Months',
+              x: -20 //center
+          },
+          subtitle: {
+              text: 'Source: Review Trackers',
+              x: -20
+          },
+          xAxis: {
+              categories: [ $scope.month[$scope.sixAgo.getMonth()], 
+                            $scope.month[$scope.fiveAgo.getMonth()], 
+                            $scope.month[$scope.fourAgo.getMonth()], 
+                            $scope.month[$scope.threeAgo.getMonth()], 
+                            $scope.month[$scope.twoAgo.getMonth()], 
+                            $scope.month[$scope.oneAgo.getMonth()]
+                          ]
+          },
+          yAxis: {
+              title: {
+                  text: 'Reviews'
+              },
+              plotLines: [{
+                  value: 0,
+                  width: 3,
+                  color: '#1A49B0'
+              }]
+          },
+          plotOptions: {
+              series: {
+                  color: '#FF0000'
+              }
+          },
+          tooltip: {
+              valueSuffix: ''
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'right',
+              verticalAlign: 'middle',
+              borderWidth: 0
+          },
+          series: [{
+              name: 'Reviews',
+              data: [$scope.sixAgoObjects.length, 
+                     $scope.fiveAgoObjects.length, 
+                     $scope.fourAgoObjects.length, 
+                     $scope.threeAgoObjects.length, 
+                     $scope.twoAgoObjects.length, 
+                     $scope.oneAgoObjects.length 
+                    ]
+          }]
+      });
+  });
+
 })
-
-
 
 
 // setup for ui-router
