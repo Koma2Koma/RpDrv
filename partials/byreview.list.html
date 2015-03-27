@@ -1,0 +1,14 @@
+
+
+<div class='listBox col-md-12'>
+  <ul class='list-col col-md-5'>
+    <li ng-repeat='review in data.reviews'>
+      {{review.author}}
+      <button ng-click="displayReview(review)" ng-init='count=0' class='btn btn-info btn-xs list-item'>View</button>
+      
+    </li>
+  </ul>
+  
+  <div id='displayBox' class='col-md-5'></div>
+   
+</div>

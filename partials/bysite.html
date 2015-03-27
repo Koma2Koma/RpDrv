@@ -1,4 +1,17 @@
-<h1>By Site</h1>
-<hr/>
-<a ui-sref="bysite.list">Show List</a>
-<div ui-view></div>
+<div class='belowFoldTitle'>
+  <h1>Review Data by Site</h1>
+  <hr/>
+</div>
+
+  <h1 class='underConstruction'>Sorry! <br>Data by Website Functionality Under Construction <br>Check Back Soon!<br></h1>
+  <h3 class='underUnderConstruction'> In the meantime, sort by review.</h3>
+  
+  <!-- Charts NOT working in ui-router partials!!! -->
+  <div id='sitesBar' style="width:49%; height:200px; display:inline-block"></div>
+
+
+  <a ui-sref="bysite.list"></a>
+  <div ui-view>
+    <div id='sitesBar' style="width:49%; height:200px; display:inline-block"></div>
+
+  </div>

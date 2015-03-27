@@ -2,24 +2,30 @@
 <head>
   <title>Reviews Data</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-  <h1>Reviews Summary</h1>
-  <h2>Overall Score: {{overallScore() | number:2 }}</h2> 
-  <h2>Total Number of Reviews: {{data.totalReviews}}</h2>
-  
+  <div class='titleBar'>
+    <h1>Reviews Summary for {{ data.locationName }}</h1>
+    <div class='titleBottom'>
+      <h2>Overall Score: {{ overallScore() | number:2 }}</h2> 
+      <h2>Total Number of Reviews: {{ data.totalReviews }}</h2>
+    </div>
+  </div>
   <div>
-    <div id="overallLine" style="width:49%; height:200px; display:inline-block"></div>    
-    <div id='totalReviews' style="width:49%; height:200px; display:inline-block" ></div>
+    <div id="overallLine" class='lineCharts'></div>    
+    <div id='totalReviews' class='lineCharts'></div>
+    <div id='sitesBar' class='barCharts'></div>
   </div>
   
-  <h4>{{today | date:full-date}}</h4>
 
-  <a ui-sref="bysite">By Site</a>
-  <a ui-sref="byrating">By Rating</a>
+  <div class='ui-ui'>
+    Sort:
+    <a ui-sref="bysite">By Site</a>
+    <a ui-sref="byreview">By Review</a>
+  </div>
 
-  <div ui-view></div>
+  <div ui-view class='belowFold'></div>
   
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>

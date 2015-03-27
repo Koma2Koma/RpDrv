@@ -2,6 +2,9 @@
 
 var app = angular.module('reviewData', ['ui.router']);
 
+// var applicationModuleVendorDependencies = ['ngResource', 'ui.router', 'ui.bootstrap', 'ui.utils','highcharts-ng'];
+
+
 app.controller('ReviewCtrl', function($scope, $http) {
 
   // initial http request gets page 1 data and totalPages to loop through all pages, sorted by publishDate.
@@ -61,12 +64,6 @@ app.controller('ReviewCtrl', function($scope, $http) {
     return date;
   }
 
-  var pastSixMonthRatings = function () {
-    var today = new Date();
-    $scope.sixMonthsAgo = addMonths(today, -6);
-
-  }();
-
   var parseReviewsByMonth = function () {
     $scope.today = new Date();
     $scope.sixAgo = addMonths(-6);
@@ -86,7 +83,6 @@ app.controller('ReviewCtrl', function($scope, $http) {
     for (var review in $scope.data.reviews) {
       var revObj = $scope.data.reviews[review];
       var revDate = new Date(revObj.publishDate);
-      console.log(typeof(revDate));
       if ( revDate >= $scope.sixAgo && revDate < $scope.fiveAgo) {
         $scope.sixAgoObjects.push(revObj);
       } else if (revDate >= $scope.fiveAgo && revDate < $scope.fourAgo){
@@ -100,12 +96,51 @@ app.controller('ReviewCtrl', function($scope, $http) {
       } else if (revDate >= $scope.oneAgo && revDate < $scope.today){
         $scope.oneAgoObjects.push(revObj);
       }
-    }
-      
+    }      
   }();
+
+  var getUnique = function(array){
+    var u = {}, a = [];
+    for(var i = 0, l = array.length; i < l; ++i){
+      if(u.hasOwnProperty(array[i])) {
+         continue;
+      }
+      a.push(array[i]);
+      u[array[i]] = 1;
+    }
+    return a;
+  };
+
+  var buildSiteArrays = function () {
+
+    $scope.sitesArray = [];
+    for (var review in $scope.data.reviews) {
+      var revObj = $scope.data.reviews[review];
+      $scope.sitesArray.push(revObj.siteName);
+    }
+    $scope.sitesArrayUnique = getUnique($scope.sitesArray);
+    
+    $scope.sitesArrayCount = [];
+    for (var i = 0; i < $scope.sitesArrayUnique.length; i++) {
+      $scope.sitesArrayCount.push(0);
+    }
+
+    for (var i = 0; i < $scope.sitesArrayUnique.length; i++) {
+      for (var j = 0; j < $scope.sitesArray.length; j++) {
+        if ($scope.sitesArrayUnique[i] == $scope.sitesArray[j]) {
+          $scope.sitesArrayCount[i] = $scope.sitesArrayCount[i] + 1;
+        }
+      }
+    }
+  }();
+
+  var parseReviewsBySite = function () {
+
+  }
 
   console.log($scope.averageRatings($scope.sixAgoObjects));
 
+  // month converter for chart data
   var monthConverter = function () {
     $scope.month = new Array();
     $scope.month[0] = "January";
@@ -122,6 +157,7 @@ app.controller('ReviewCtrl', function($scope, $http) {
     $scope.month[11] = "December";
   }();
 
+  // overall average chart
   $(function () {
       $('#overallLine').highcharts({
           title: {
@@ -148,12 +184,12 @@ app.controller('ReviewCtrl', function($scope, $http) {
               plotLines: [{
                   value: 0,
                   width: 3,
-                  color: '#1A49B0'
+                  color: '#FF2100'
               }]
           },
           plotOptions: {
               series: {
-                  color: '#0000FF'
+                  color: '#FF2100'
               }
           },
           tooltip: {
@@ -178,6 +214,7 @@ app.controller('ReviewCtrl', function($scope, $http) {
       });
   });
   
+  // amount of reviews over time chart
   $(function () {
       $('#totalReviews').highcharts({
           title: {
@@ -204,12 +241,12 @@ app.controller('ReviewCtrl', function($scope, $http) {
               plotLines: [{
                   value: 0,
                   width: 3,
-                  color: '#1A49B0'
+                  color: '#400800'
               }]
           },
           plotOptions: {
               series: {
-                  color: '#FF0000'
+                  color: '#400800'
               }
           },
           tooltip: {
@@ -234,26 +271,84 @@ app.controller('ReviewCtrl', function($scope, $http) {
       });
   });
 
+  $(function () {
+    //alert($scope.sitesArrayUnique);
+    $('#sitesBar').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Total Reviews by Site'
+        },
+        subtitle: {
+            text: 'Source: Review Trackers'
+        },
+        xAxis: {
+            categories: $scope.sitesArrayUnique,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Reviews'
+            }
+        },
+        plotOptions: {
+              column: {
+                  color: '#7F1100'
+              }
+          },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true,
+            valueSuffix: ''
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        point: {
+          key: 'reviews'
+        },
+        series: [{
+            name: 'Number of Reviews',
+            data: $scope.sitesArrayCount,
+            color: '#7F1100'
+        }]
+    });
+});
+
+  // display reviews in the byreview.html partial
   $scope.displayReview = function (reviewObj) {
 
     var date = new Date(reviewObj.publishDate);
 
-    $('#displayBox').html('Author: ' + reviewObj.author + '<br>' +
-                          'Date Published: ' + date.toDateString() + '<br>' +
-                          'Rating: ' + reviewObj.rating + '<br>' +
-                          'Review: ' + reviewObj.review + '<br>' +
-                          'Review URL: ' + reviewObj.reviewUrl + '<br>' +
-                          'Site Name: ' + reviewObj.siteName);
+    $('#displayBox').html('<strong>Author: </strong>' + reviewObj.author + '<br>' +
+                          '<strong>Date Published: </strong>' + date.toDateString() + '<br>' +
+                          '<strong>Rating: </strong>' + reviewObj.rating + '<br>' +
+                          '<strong>Review: </strong>' + reviewObj.review + '<br>' +
+                          '<strong>Review URL: </strong>' + reviewObj.reviewUrl + '<br>' +
+                          '<strong>Site Name: </strong>' + reviewObj.siteName);
   }
+
+
 
 })
 
 
 // setup for ui-router
 app.config(function($stateProvider, $urlRouterProvider) {
+
+  // var applicationModuleVendorDependencies = ['ngResource', 'ui.router', 'ui.bootstrap', 'ui.utils','highcharts-ng'];
   //
   // For any unmatched url, redirect to /state1
-  $urlRouterProvider.otherwise("/bysite");
+  $urlRouterProvider.otherwise("/byreview");
   //
   // Now set up the states
   $stateProvider
@@ -264,19 +359,19 @@ app.config(function($stateProvider, $urlRouterProvider) {
     .state('bysite.list', {
       url: "/list",
       templateUrl: "partials/bysite.list.html",
-      controller: function($scope) {
-        $scope.items = ["A", "List", "Of", "Items"];
-      }
+      // controller: function($scope) {
+      //   $scope.items = ["A", "List", "Of", "Items"];
+      // }
     })
-    .state('byrating', {
-      url: "/byrating",
-      templateUrl: "partials/byrating.html"
+    .state('byreview', {
+      url: "/byreview",
+      templateUrl: "partials/byreview.html"
     })
-    .state('byrating.list', {
+    .state('byreview.list', {
       url: "/list",
-      templateUrl: "partials/byrating.list.html",
-      controller: function($scope) {
-        $scope.things = ["A", "Set", "Of", "Things"];
-      }
+      templateUrl: "partials/byreview.list.html",
+      // controller: function($scope) {
+      //   $scope.things = ["A", "Set", "Of", "Things"];
+      // }
     });
 });
